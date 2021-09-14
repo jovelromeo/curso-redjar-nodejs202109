@@ -12,7 +12,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
  - Los slots se numeran de izquierda a derecha y de arriba abajo (0-11).
  - ItemStack es la cantidad maxima de items del mismo tipo que pueden ocupar un slot del inventario.
   
-###Slot
+### Slot
     
 ```typescript
 {
@@ -20,7 +20,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
     itemStack: ItemStack | null
 }
 ```
-###ItemStack
+### ItemStack
 
 ```typescript
 {
@@ -30,7 +30,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
 }
 ```
   
-###Item
+### Item
 
 ```typescript 
 {
@@ -41,7 +41,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
     type: ItemType;
 }
 ``` 
-###ItemType
+### ItemType
 ```typescript 
 {
     Consumable: 0,
@@ -52,7 +52,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
 }
 ```  
 
-###Inventory 
+### Inventory 
 ```typescript
 {
    slots: Slot[]
