@@ -8,28 +8,20 @@ esta conformado por slots (cada cuadrado)
 
 Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
  - Total de 12 slots.
- - Cada slot puede ser ocupado unicamente por 1 **itemStack***.
+ - Cada slot puede ser ocupado unicamente por 1 item.
  - Los slots se numeran de izquierda a derecha y de arriba abajo (0-11).
- - ItemStack es la cantidad maxima de items del mismo tipo que pueden ocupar un slot del inventario.
+ - stackSize es la cantidad maxima de items del mismo tipo que pueden ocupar un slot del inventario.
   
 ### Slot
     
 ```typescript
 {
     id: number
-    itemStack: ItemStack | null
+    item: Item | null
+    quantity: number
+    stackSize: number
 }
-```
-### ItemStack
-
-```typescript
-{
-    uid: string;
-    item: Item;
-    quantity: number;
-}
-```
-  
+```  
 ### Item
 
 ```typescript 
@@ -57,7 +49,7 @@ Nuestro objetivo es armar el inventario que tiene las siguientes reglas:
 {
    slots: Slot[]
    slotsMap: Record<number,Slot>
-   items: ItemStack[]
+   items: Item[]
 }
 ```
 
@@ -76,12 +68,8 @@ Los items de tipo (ItemType) tienen un stack size definido de:
 ### Ejercicios
 Las actividades son repaso de los puntos que vimos en la capacitación.
 
-Los lugares a cambiar estan marcados con **ACTIVIDAD**  y **FIN ACTIVIDAD**
-
-El codigo es el resultado del enunciado planteado
-
-
 ### Instalacion
+    git clone
     cd actividad_1
     npm install
 

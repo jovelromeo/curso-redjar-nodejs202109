@@ -1,4 +1,5 @@
 const util = require('util')
+
 const log = (data) => console.log(util.inspect(data, {showHidden: false, depth: Infinity, colors: true}))
 
 // Returns UUIDV4 string
@@ -16,6 +17,18 @@ const ItemTypes = {
     Armor: 3,
     Unset: 4,
 }
+// Practica operador ||
+// Usar operador || para tomar valores por defecto
+// Ej: { valor: someVariable || "valor por defecto"}
+const createItem = ({gid, name, description, type, uid} = {}) => {
+    return {
+        uid, // por defecto deberia ser uuidv4()
+        gid, // por defecto deberia ser 0
+        name, // por defecto string vacio
+        description, // por defecto null
+        type, // por defecto ItemTypes Unset
+    }
+}
 
 const calculateStackSize = (item) => {
     switch(item?.type){
@@ -29,121 +42,114 @@ const calculateStackSize = (item) => {
     }
     return 0;
 }
-/** ACTIVIDAD  */
-    // Usar operador || para tomar valores por defecto
-    // Ej: { valor: 1 || "valor por defecto"}
-const createItem = ({gid, name, description, type, uid} = {}) => {
-    return {
-        uid, // por defecto deberia ser uuidv4
-        gid, // por defecto deberia ser 0
-        name, // por defecto string vacio
-        description, // por defecto null
-        type // por defecto ItemTypes Unset
-    }
-}
 
-const createItemStack = (item, quantity) => {
-    return {
-        item, // por defecto null
-        quantity, // por defecto 0
-        uid: item?.uid, // por defecto null
-        stackSize: calculateStackSize(item)
-    }
-}
-/** FIN ACTIVIDAD  */
-
-const findEmptySlot = (inventory) => {
-    for(let slot of inventory.slots){
-        if(!slot.itemStack || !slot.itemStack.item){
-            return slot;
-        }
-    }
+// Practica arrays
+// Practica method find in array
+// https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+const findEmptySlot = (slots) => {
+    //slots is an array that contains slot objects
+    // {item, quantity, stackSize}
+    // find first elements that matchs slot empty condition
+    // an slot is empty if item is null
     return null;
 }
 
-/** ACTIVIDAD  */
-const addItem = (inventory, item, quantity, slotId) => {
-    const slot = inventory.slotsMap[slotId];
-    // Resolver con operador ?
-    // ejemplo a?.prop?.prop2
-    if(slot.itemStack && slot.itemStack.item.gid === item.gid){
-        const newQuantity = slot.itemStack.quantity + quantity
-        const stackSize = slot.itemStack.stackSize
-        // sobrante si la cantidad total es mayor al stack size
-        const rest = newQuantity - stackSize
-        // Si sobran items (es decir no entran en el stack fijo) (rest > 0)
-        // itemStack.quantity es el stack size, caso contrario es la nueva cantidad
-        // TODO: resolver la linea de abajo con una ternaria a ? b : c
-        slot.itemStack.quantity = 0 
-        if (rest > 0){
-            const emptySlot = findEmptySlot(inventory);
-            if(emptySlot){
-                emptySlot.itemStack = createItemStack(item, quantity);
-                inventory.items.push(emptySlot.itemStack)
-            }
+// Practica method find in array
+const findStackableSlotForItem = (slots, item) => {
+    //slots is an array that contains slot objects
+    // {item, quantity, stackSize}
+    // find first elements that matchs slot stackable condition
+    // an slot is stackable if item is not null
+    // and item.gid equals slot.item.gid
+    // and slot is not full (slot.quantity < slot.stackSize)
+    return null
+}
+
+// Necesitamos buscar items en los slots que contengan el gid
+// Hint: podemos usar array filter
+// https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+// slots puede o no tener item, se debe validar
+const findItemsByGID = (slots, gid) => {
+    //slots is an array that contains slot objects
+    // {item, quantity, stackSize}
+    // item contains {gid: number}
+    return []
+}
+
+const calculateSlotQuantityAndRest = (slotQ, stackSize, quantity) => {
+    const newQuantity = slotQ + quantity
+    //sobrante si la cantidad total es mayor al stack size
+    const rest = newQuantity - stackSize
+    // Si sobran items (es decir no entran en el stack fijo) (rest > 0)
+    // newQ es el stack size, caso contrario es la nueva cantidad
+    // Practica operador ternario
+    // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+    // Resolver con una ternaria a ? b : c
+    const newQ = 0
+    return {
+        quantity: newQ,
+        rest
+    }
+}
+
+const addItem = (inventory, item, quantity) => {
+    let slot = null;
+ 
+    slot = findStackableSlotForItem(inventory.slots, item);
+ 
+    if(!slot){
+        slot = findEmptySlot(inventory.slots)
+    }
+    // Inventory full
+    if (!slot) return;
+
+    // Practica optional chaining
+    // https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+    // Reemplazar expresion con operador optional chaining
+    if(slot && slot.item && slot.item.gid === item.gid){
+        const res = calculateSlotQuantityAndRest(slot.quantity, slot.stackSize, quantity)
+        slot.quantity = res.quantity
+        if (res.rest > 0){
+            addItem(inventory, item, res.rest)
         }else{
-            slot.itemStack.item = item;
-            slot.itemStack.uid = item.uid;
+            slot.item.uid = item.uid;
         }
     }else{
-        slot.itemStack = createItemStack(item, quantity)
-        inventory.items.push(slot.itemStack)
-    }
-}
-/** FIN ACTIVIDAD  */
-
-const createSlot = (id, itemStack) => {
-    return {
-        id,
-        itemStack
+        slot.quantity = quantity
+        slot.stackSize = calculateStackSize(item)
+        slot.item = item;
+        inventory.items.push(slot)
     }
 }
 
+ // Nothing to do here :)
 const createInventory = () => {
     const slots = [];
-    const slotsMap = {};
     for(let i=0;i<12;i++){
-        const slot = createSlot(i)
-        slotsMap[i] = slot;
+        const slot = {
+            stackSize: 0,
+            item: null,
+            quantity: 0,
+        }
         slots.push(slot);
     }
     const items = [];
     return {
         slots,
-        slotsMap,
         items,
     }
 }
-
-const inventory = createInventory();
-const armorCuero = createItem({
-        uid: uuidv4(), 
-        gid: 0,
-        name: "Camisa de cuero",
-        description: "No defiende un carajo",
-        type: ItemTypes.Armor
-    })
-
-const resourceWood = createItem({
-        uid:uuidv4(),
-        gid:1,
-        name:"Tabla de madera",
-        description:"La madera es el recurso mas raro del universo",
-        type: ItemTypes.Resource,
-    })
-
-
-addItem(inventory, resourceWood, 10, 5)
-addItem(inventory, armorCuero, 1, 1)
-log(inventory)
 
 
 
 module.exports = {
     createItem,
-    createItemStack,
     ItemTypes,
     createInventory,
     addItem,
-    uuidv4
+    uuidv4,
+    findEmptySlot,
+    findStackableSlotForItem,
+    findItemsByGID,
+    calculateSlotQuantityAndRest
 }
