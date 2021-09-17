@@ -69,7 +69,7 @@ Los items de tipo (ItemType) tienen un stack size definido de:
 Las actividades son repaso de los puntos que vimos en la capacitación.
 
 ### Instalacion
-    git clone
+    git clone https://github.com/jovelromeo/curso-redjar-nodejs202109.git
     cd actividad_1
     npm install
 
@@ -77,3 +77,5 @@ Las actividades son repaso de los puntos que vimos en la capacitación.
     npm test  
 
 La actividad se considera completada si pasa los tests.
+
+![image](https://user-images.githubusercontent.com/27928275/133816283-bf9b2145-fe9f-4fd2-a657-31774acc2531.png)
