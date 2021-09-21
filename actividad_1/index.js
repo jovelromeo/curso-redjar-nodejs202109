@@ -22,11 +22,11 @@ const ItemTypes = {
 // Ej: { valor: someVariable || "valor por defecto"}
 const createItem = ({gid, name, description, type, uid} = {}) => {
     return {
-        uid, // por defecto deberia ser uuidv4()
-        gid, // por defecto deberia ser 0
-        name, // por defecto string vacio
-        description, // por defecto null
-        type, // por defecto ItemTypes Unset
+        uid: uid || uuidv4(), // por defecto deberia ser uuidv4()
+        gid: gid || 0, // por defecto deberia ser 0
+        name: name || "", // por defecto string vacio
+        description: description || null, // por defecto null
+        type: type || ItemTypes.Unset, // por defecto ItemTypes Unset
     }
 }
 
