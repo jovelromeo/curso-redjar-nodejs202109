@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/jovelromeo/curso-redjar-nodejs202109#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "joi": "^17.4.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
