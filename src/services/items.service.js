@@ -1,40 +1,34 @@
+const ItemRepository = require("../repositories/item.repository");
+
 const items = [];
 
 // llamada a repository de db para crear una entidad item
-const create = (item) => {
-    items.push(item);
-    return item;
+const create = async (item) => {
+    const dbItem = await ItemRepository.save(item);
+    const response = { id: dbItem._id.toString(), ...dbItem._doc };
+    delete response._id;
+    delete response.__v;
+    return response;
 }
 
-const getAll = () => {
+const getAll = async () => {
+    const items = await ItemRepository.findAll();
     return items;
 }
 
-const getOne = (uid) => {
-    const item = items.find(item => item.uid === uid);
+const getOne = async (id) => {
+    const item = await ItemRepository.findById(id);
     return item;
 }
 
-const deleteInternal = (uid) => {
-    const item = getOne(uid)
-    if (item){
-        const itemIndex = items.indexOf(item)
-        if (itemIndex !== -1) {
-            items.splice(itemIndex, 1)
-        }
-    }
+const deleteInternal = async (id) => {
+   const item = await ItemRepository.delete(id);
     return item
 }
 
-const update = (uid, data) => {
-    const item = getOne(uid);
-    if(item){
-        item.gid = data.gid
-        item.description = data.description
-        item.name = data.name
-        item.type = data.type
-    }
-    return item
+const update = async (id, data) => {
+    const item = await ItemRepository.update(id, data);
+    return item;
 }
 
 module.exports = {

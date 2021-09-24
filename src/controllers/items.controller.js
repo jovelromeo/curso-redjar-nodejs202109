@@ -1,28 +1,35 @@
 const { itemsService } = require("../services")
 const { createItem } = require("../../actividad_1/index")
 
-const create = (req, res) => {
+const create = async (req, res) => {
     const item = createItem({
             ...req.body
     })
-    const entity = itemsService.create(item);
+
+    const entity = await itemsService.create(item);
+
     res.status(201).send({
         message: "Success",
         data: entity,
     })
 }
 
-const getAll = (req, res) => {
-    const items = itemsService.getAll()
+const getAll = async (req, res) => {
+    const items = await itemsService.getAll()
     res.send({
         message: "Success",
-        data: items
+        data: items.map((item) => {
+            const response = { id: item._id.toString(), ...item };
+            delete response._id;
+            delete response.__v;
+            return response;
+        })
     })
 }
 
-const getOne = (req, res) => {
-    const {uid} = req.params;
-    const item = itemsService.getOne(uid)
+const getOne = async (req, res) => {
+    const { id } = req.params;
+    const item = await itemsService.getOne(id);
     if(!item){
         res.status(404).send({
             message:"Not found"
@@ -35,9 +42,9 @@ const getOne = (req, res) => {
     })
 }
 
-const deleteItem = (req, res) => {
+const deleteItem = async (req, res) => {
     const {uid} = req.params;
-    const item = itemsService.delete(uid)
+    const item = await itemsService.delete(uid)
     if(!item){
         res.status(404).send({
             message:"Not found"
@@ -50,9 +57,9 @@ const deleteItem = (req, res) => {
     })
 }
 
-const update = (req, res) => {
-    const {uid} = req.params;
-    const item = itemsService.update(uid, req.body)
+const update = async (req, res) => {
+    const {id} = req.params;
+    const item = await itemsService.update(id, req.body)
     if(!item){
         res.status(404).send({
             message:"Not found"
